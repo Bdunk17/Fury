@@ -30,7 +30,7 @@ local function DoUpdateConfiguration(defaults)
       {"MaximumRage", 60},        -- Set this to the maximum amount of rage allowed when using abilities to increase rage
       {"NextAttackRage", 30},     -- Set this to the minimum rage to have to use next attack abilities (Cleave and Heroic Strike)
       {"StanceChangeRage", 25},   -- Set this to the amount of rage allowed to be wasted when switching stances
-      {"PrimaryStance", false},   -- Set this to the stance to fall back to after performing an attack requiring another stance
+      {"PrimaryStance", 3},   -- Set this to the stance to fall back to after performing an attack requiring another stance
 
       {MODE_HEADER_PROT, false },              -- Use threat and defensive abilities
       {MODE_HEADER_AOE, false},                -- Disable auto use of aoe (Disables OP, HS, BT, Exe, Enablse Cleave, Whirlwind)
@@ -51,7 +51,7 @@ local function DoUpdateConfiguration(defaults)
       {ABILITY_INTERCEPT_FURY, true},          -- in combat charge
       {ABILITY_MORTAL_STRIKE_FURY, true},      -- Arms main attack
       {ABILITY_SWEEPING_STRIKES_FURY, true},   -- Aoe for arms
-      {ABILITY_OVERPOWER_FURY, true},          -- Counterattack dodge
+      {ABILITY_OVERPOWER_FURY, false},          -- Counterattack dodge
       {ABILITY_PUMMEL_FURY, true},             -- Counter spellcast
       {ABILITY_REND_FURY, true},               -- Counter rogues vanish
       {ABILITY_SHIELD_BASH_FURY, true},        -- Prot
@@ -144,31 +144,31 @@ end
 --------------------------------------------------
 -- Log fury debug to channel and log file
 local function LogToFile(enable)
-    if enable then
-        LoggingChat(1)
-        LoggingCombat(1)
-        if Fury_Configuration["DebugChannel"] == nil then
-            local channel = "Fury_"..tostring(GetTime() * 1000)
-            JoinChannelByName(channel, "test", nil, 1)
-            local id, _ = GetChannelName(channel)
-            Fury_Configuration["DebugChannel"] = id
-        else
-            local _, channel = GetChannelName(Fury_Configuration["DebugChannel"])
-            if channel ~= nil then
-                Print("Joining channel : "..channel)
-                JoinChannelByName(channel, "test", nil, 1)
-            else
-                Fury_Configuration["DebugChannel"] = nil
-                LogToFile(enable)
-            end
-        end
-        Print(TEXT_FURY_LOGGING_CHANNEL_ON)
-    else
-        LoggingChat(0)
-        LoggingCombat(0)
-        Fury_Configuration["DebugChannel"] = nil
-        Print(TEXT_FURY_LOGGING_CHANNEL_OFF)
-    end
+    --if enable then
+    --    LoggingChat(1)
+    --    LoggingCombat(1)
+    --    if Fury_Configuration["DebugChannel"] == nil then
+    --        local channel = "Fury_"..tostring(GetTime() * 1000)
+    --        JoinChannelByName(channel, "test", nil, 1)
+    --        local id, _ = GetChannelName(channel)
+    --        Fury_Configuration["DebugChannel"] = id
+    --    else
+    --        local _, channel = GetChannelName(Fury_Configuration["DebugChannel"])
+    --        if channel ~= nil then
+    --            Print("Joining channel : "..channel)
+    --            JoinChannelByName(channel, "test", nil, 1)
+    --        else
+    --            Fury_Configuration["DebugChannel"] = nil
+    --            LogToFile(enable)
+    --        end
+    --    end
+    --    Print(TEXT_FURY_LOGGING_CHANNEL_ON)
+    --else
+    --    LoggingChat(0)
+    --    LoggingCombat(0)
+    --    Fury_Configuration["DebugChannel"] = nil
+    --    Print(TEXT_FURY_LOGGING_CHANNEL_OFF)
+    --end
 end
 
 --------------------------------------------------
@@ -284,52 +284,55 @@ local function Fury_InitDistance()
     for i = 1, 120 do
         t = GetActionTexture(i)
         if t then
+            --print(tostring(t));
             if not yard30 then
                 if string.find(t, "Ability_Marksmanship") -- Shoot
-                  or string.find(t, "Ability_Throw") then -- Throw
+                        or string.find(t, "Ability_Throw") then -- Throw
                     yard30 = i
                     Debug("30 yard: "..t)
                     found = found + 1
                 end
             end
             if not yard25 then
-                if string.find(t, "Ability_Warrior_Charge") -- Charge
-                  or string.find(t, "Ability_Rogue_Sprint") then -- Intercept
+                --if string.find(t, "Ability_Warrior_Charge") -- Charge
+                --        or string.find(t, "Ability_Rogue_Sprint") then -- Intercept
+                if string.find(t, "Ability_Rogue_Sprint") then -- Intercept
                     yard25 = i
                     Debug("25 yard: "..t)
                     found = found + 1
                 end
             end
             if not yard10 then
-                if string.find(t, "Ability_GolemThunderClap")
-                  or string.find(t, "Spell_Nature_ThunderClap") then -- Thunder Clap
+                --if string.find(t, "Ability_GolemThunderClap")
+                --        or string.find(t, "Spell_Nature_ThunderClap") then -- Thunder Clap
+                if string.find(t, "Ability_GolemThunderClap") then
                     yard10 = i
                     Debug("10 yard: "..t)
                     found = found + 1
                 end
             end
             if not yard08 then
-                if string.find(t, "Ability_Marksmanship") -- Shoot
-                  or string.find(t, "Ability_Throw") then -- Throw
+                if string.find(t, "Ability_Marksmanship") then -- Shoot
+                    --if string.find(t, "Ability_Throw") then -- Throw
                     yard08 = i
-                    Debug("8 yard: "..t)
+                    Debug("08 yard: "..t)
                     found = found + 1
                 end
             end
             if not yard05 then
                 if string.find(t, "Ability_Warrior_Sunder") -- Sunder Armor
-                  or string.find(t, "Ability_Warrior_DecisiveStrike") -- Slam
-                  or string.find(t, "Ability_Warrior_Disarm") -- Disarm
-                  or string.find(t, "INV_Gauntlets_04") -- Pummel
-                  or string.find(t, "Ability_MeleeDamage") -- Overpower
-                  or string.find(t, "Ability_Warrior_PunishingBlow") -- Mocking blow
-                  or string.find(t, "Ability_Warrior_Revenge") -- Revenge
-                  or string.find(t, "Ability_Gouge") -- Rend
-                  or string.find(t, "INV_Sword_48") -- Execute
-                  or string.find(t, "ability_warrior_savageblow") -- Mortal Strike
-                  or string.find(t, "INV_Shield_05") -- Shield Slam
-                  or string.find(t, "Ability_ShockWave") -- Hamtstring
-                  or string.find(t, "Spell_Nature_Bloodlust") then -- Bloodthirst
+                        or string.find(t, "Ability_Warrior_DecisiveStrike") -- Slam
+                        or string.find(t, "Ability_Warrior_Disarm") -- Disarm
+                        or string.find(t, "INV_Gauntlets_04") -- Pummel
+                        or string.find(t, "Ability_MeleeDamage") -- Overpower
+                        or string.find(t, "Ability_Warrior_PunishingBlow") -- Mocking blow
+                        or string.find(t, "Ability_Warrior_Revenge") -- Revenge
+                        or string.find(t, "Ability_Gouge") -- Rend
+                        or string.find(t, "INV_Sword_48") -- Execute
+                        or string.find(t, "ability_warrior_savageblow") -- Mortal Strike
+                        or string.find(t, "INV_Shield_05") -- Shield Slam
+                        or string.find(t, "Ability_ShockWave") -- Hamtstring
+                        or string.find(t, "Spell_Nature_Bloodlust") then -- Bloodthirst
                     yard05 = i
                     Debug("5 yard: "..t)
                     found = found + 1
@@ -341,9 +344,8 @@ local function Fury_InitDistance()
             end
         end
     end
-    -- Print message if any distance check spell is missing
-    if not yard30
-      or not yard08 then
+    -- Print if any distance check spell is missing
+    if not yard30 or not yard08 then
         Print(CHAT_MISSING_SPELL_SHOOT_THROW_FURY)
     end
     if not yard25 then
@@ -362,21 +364,16 @@ end
 local function Fury_Distance()
     if not UnitCanAttack("player", "target") then
         return 100 -- invalid target
-    elseif yard05
-      and IsActionInRange(yard05) == 1 then
+    elseif yard05 and IsActionInRange(yard05) == 1 then
         return 5 -- 0 - 5 yards
-    elseif yard10
-      and IsActionInRange(yard10) == 1 then
-        if yard08
-          and IsActionInRange(yard08) == 0 then
+    elseif yard10 and IsActionInRange(yard10) == 1 then
+        if yard08 and IsActionInRange(yard08) == 0 then
             return 7 -- 6 - 7 yards
         end
         return 10 -- 8 - 10 yards
-    elseif yard25
-      and IsActionInRange(yard25) == 1 then
+    elseif yard25 and IsActionInRange(yard25) == 1 then
         return 25 -- 11 - 25 yards
-    elseif yard30
-      and IsActionInRange(yard30) == 1 then
+    elseif yard30 and IsActionInRange(yard30) == 1 then
         return 30 -- 26 - 30 yards
     end
     return 100 -- 31 - <na> yards
@@ -1675,6 +1672,11 @@ end
 
 local function Fury_Charge()
     local dist = Fury_Distance()
+    --print(tostring(Fury_Distance()));
+    --if true then
+    --    return;
+    --end
+
     if not UnitExists("target") and
       not FuryCombat then
         if Fury_Configuration["PrimaryStance"]
@@ -2200,7 +2202,7 @@ function Fury_SlashCommand(msg)
             end },
 
         ["default"] = { help = HEL_DEFAULT, fn = function(options)
-                UpdateConfiguration(true) -- Set configurtion to default
+                DoUpdateConfiguration(true) -- Set configurtion to default
             end },
 
         ["demodiff"] = { help = HELP_DEMODIFF, fn = function(options)
