@@ -1700,6 +1700,7 @@ local function Fury_Charge()
             -- Auto attack closest target
             AttackTarget()
         end
+
         if Fury_Configuration[ABILITY_THUNDER_CLAP_FURY]
           and FuryLastChargeCast + 0.6 <= GetTime()
           and dist <= 7
@@ -1720,6 +1721,17 @@ local function Fury_Charge()
                 CastSpellByName(ABILITY_THUNDER_CLAP_FURY)
                 FuryLastSpellCast = GetTime()
             end
+
+        --if not Fury_Configuration[ABILITY_THUNDER_CLAP_FURY]
+        --  and FuryLastBattleShoutCast + 0.6 <= GetTime()
+        --  and dist <= 7
+        --  and UnitMana("player") >= FuryThunderClapCost
+        --  and IsSpellReady(ABILITY_THUNDER_CLAP_FURY) then
+        --    if GetActiveStance() ~= 1 then
+        --
+        --    end
+        --
+        --    end
 
         elseif Fury_Configuration[ABILITY_INTERCEPT_FURY]
           and GetActiveStance() == 3
@@ -1878,6 +1890,7 @@ local function Fury_ScanTalents()
         i = i + 1
     end
     Debug("Scanning Talent Tree")
+    FuryBattleShoutCost = 10;
     -- Calculate the cost of Heroic Strike based on talents
     local _, _, _, _, currRank = GetTalentInfo(1, 1)
     FuryHeroicStrikeCost = (15 - tonumber(currRank))
@@ -2088,6 +2101,13 @@ local tankmode = {
  {ABILITY_OVERPOWER_FURY, false },
  {ABILITY_DEMORALIZING_SHOUT_FURY, true }
 }
+
+function AmProt()
+    if Fury_Configuration[MODE_HEADER_PROT] then
+        return true;
+    end
+    return false;
+end
 
 function Fury_Togglemode(mode, prefix)
     if Fury_Configuration[prefix] == true then
@@ -2436,6 +2456,8 @@ function Fury_OnLoad()
     FuryLastLog = GetTime()
     FuryRevengeTime = 0
     FuryLastChargeCast = 0
+    FuryLastBattleShoutCast = 0
+
     FuryRevengeReadyUntil = 0
     FlurryCombatTotal = 0
     FuryCombatTotal = 0

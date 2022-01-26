@@ -1,0 +1,13 @@
+
+
+HasShield() true if you are wearing shield
+
+
+
+Battle Stance
+Charge
+Defensive Stance
+Bloodrage
+Battle Shout
+Shield Block
+Revenge
