@@ -186,6 +186,7 @@ BOSS_STRAT_BARON_RIVENDERE_FURY    = "Baron Rivendare"
 MODE_HEADER_AOE    = "AoE"
 MODE_HEADER_DEBUFF = "Debuff"
 MODE_HEADER_PROT   = "Prot"
+MODE_HEADER_AOE_TANK = true
 
 SLASH_FURY_ATTACKRAGE = "Minimum rage required when using Heroic Strike or Cleave set to dump rage "
 SLASH_FURY_AUTOATTACK = "Autoattack"

@@ -1,13 +1,30 @@
 
+current changes
+
+Added MODE_HEADER_AOE_TANK as toggle for AE/single target tank mode
+
+
+
 
 HasShield() true if you are wearing shield
 
+AmProt() true if in tank mode
+
+
+MODE_HEADER_AOE_TANK
 
 
 Battle Stance
 Charge
+Battle Shout
 Defensive Stance
 Bloodrage
-Battle Shout
 Shield Block
 Revenge
+
+
+
+
+
+
+MODE_HEADER_AOE

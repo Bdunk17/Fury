@@ -35,6 +35,7 @@ local function DoUpdateConfiguration(defaults)
       {MODE_HEADER_PROT, false },              -- Use threat and defensive abilities
       {MODE_HEADER_AOE, false},                -- Disable auto use of aoe (Disables OP, HS, BT, Exe, Enablse Cleave, Whirlwind)
       {MODE_HEADER_DEBUFF, false},             -- use cures when player have a debuff
+      {MODE_HEADER_AOE_TANK, true},            -- toggle for single <-> AE tank mode
 
       {ABILITY_BATTLE_SHOUT_FURY, true},       -- Set to false to disable use of ability
       {ABILITY_BERSERKER_RAGE_FURY, true},     -- Used to counter fears
@@ -57,7 +58,7 @@ local function DoUpdateConfiguration(defaults)
       {ABILITY_SHIELD_BASH_FURY, true},        -- Prot
       {ABILITY_SHIELD_SLAM_FURY, true},        -- Prot
       {ABILITY_DEATH_WISH_FURY, true},         -- Death wish on cooldown
-      {ABILITY_THUNDER_CLAP_FURY, true},       -- slow enemies
+      {ABILITY_THUNDER_CLAP_FURY, false},       -- slow enemies
       {ABILITY_WHIRLWIND_FURY, true},          -- Fury rotation and aoe
       {ABILITY_REVENGE_FURY, false},           -- Prot
 
@@ -1702,6 +1703,7 @@ local function Fury_Charge()
         end
 
         if Fury_Configuration[ABILITY_THUNDER_CLAP_FURY]
+          and Fury_Configuration[MODE_HEADER_AOE]
           and FuryLastChargeCast + 0.6 <= GetTime()
           and dist <= 7
           and not SnareDebuff("target")
@@ -1722,16 +1724,37 @@ local function Fury_Charge()
                 FuryLastSpellCast = GetTime()
             end
 
-        --if not Fury_Configuration[ABILITY_THUNDER_CLAP_FURY]
-        --  and FuryLastBattleShoutCast + 0.6 <= GetTime()
-        --  and dist <= 7
-        --  and UnitMana("player") >= FuryThunderClapCost
-        --  and IsSpellReady(ABILITY_THUNDER_CLAP_FURY) then
-        --    if GetActiveStance() ~= 1 then
-        --
-        --    end
-        --
-        --    end
+        elseif not Fury_Configuration[MODE_HEADER_AOE]
+          and AmProt()
+          --and FuryLastBattleShoutCast + 0.6 <= GetTime()
+          and FuryLastChargeCast + 3 > GetTime()
+          and dist <= 7
+          and UnitMana("player") >= FuryBattleShoutCost
+          and IsSpellReady(ABILITY_BATTLE_SHOUT_FURY) then
+            print("casting battle shout");
+            print("FLC: " .. tostring(FuryLastChargeCast) .. " /GT: " .. tostring(GetTime()));
+            CastSpellByName(ABILITY_BATTLE_SHOUT_FURY)
+
+        elseif AmProt()
+          and HasShield()
+          and dist <= 7
+          and UnitMana("player") >= FuryShieldBlockCost
+          --and FuryLastChargeCast + 2 <= GetTime()
+          and IsSpellReady(ABILITY_SHIELD_BLOCK_FURY) then
+            if GetActiveStance() ~= 2 then
+                if FuryOldStance == nil then
+                    FuryOldStance = GetActiveStance()
+                end
+                Debug("C2.Defensive Stance, Shield Block")
+                DoShapeShift(2)
+            else
+                Debug("C2.Shield Block")
+                if FuryOldStance == 1 then
+                    FuryDanceDone = true
+                end
+                CastSpellByName(ABILITY_SHIELD_BLOCK_FURY)
+                --FuryLastSpellCast = GetTime()
+            end
 
         elseif Fury_Configuration[ABILITY_INTERCEPT_FURY]
           and GetActiveStance() == 3
@@ -1765,6 +1788,8 @@ local function Fury_Charge()
 
         elseif Fury_Configuration[ABILITY_INTERCEPT_FURY]
           and GetActiveStance() ~= 3
+          and dist <= 25
+          and dist > 7
           and UnitMana("player") >= 10
           and FuryLastChargeCast + 1 < GetTime()
           and IsSpellReadyIn(ABILITY_INTERCEPT_FURY) <= 3 then
@@ -1891,6 +1916,7 @@ local function Fury_ScanTalents()
     end
     Debug("Scanning Talent Tree")
     FuryBattleShoutCost = 10;
+    FuryShieldBlockCost = 10;
     -- Calculate the cost of Heroic Strike based on talents
     local _, _, _, _, currRank = GetTalentInfo(1, 1)
     FuryHeroicStrikeCost = (15 - tonumber(currRank))
