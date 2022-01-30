@@ -102,6 +102,38 @@ local function Fury_Configuration_Init()
         Fury_ImmuneDisarm = { }
     end
     DoUpdateConfiguration(false) -- Set to value if nil
+
+    FuryConfig:Show();
+end
+
+--------------------------------------------------
+--
+-- UI Tab Switch
+--
+--------------------------------------------------
+function Fury_ConfigTab_OnClick()
+    if this:GetName() == "FuryConfigTab1" then
+        FuryConfig_GeneralOptionsFrame:Show();
+        FuryConfig_HealingTargetFilterFrame:Hide();
+        FuryConfig_MessagesAndNotificationFrame:Hide();
+    elseif this:GetName() == "FuryConfigTab2" then
+        FuryConfig_GeneralOptionsFrame:Hide();
+        FuryConfig_HealingTargetFilterFrame:Show();
+        FuryConfig_MessagesAndNotificationFrame:Hide();
+    elseif this:GetName() == "FuryConfigTab3" then
+        FuryConfig_GeneralOptionsFrame:Hide();
+        FuryConfig_HealingTargetFilterFrame:Hide();
+        FuryConfig_MessagesAndNotificationFrame:Show();
+    end
+    PlaySound("igCharacterInfoTab");
+end
+
+function Fury_ToggleConfigurationPanel()
+    if FuryConfig:IsShown() then
+        FuryConfig:Hide();
+    elseif not FuryConfig:IsShown() then
+        FuryConfig:Show();
+    end
 end
 
 --------------------------------------------------
@@ -738,6 +770,8 @@ local function AddEnemyCount(Enemies)
     if Enemies < 2
       and Fury_Configuration[MODE_HEADER_AOE] then
         Print(TEXT_FURY_DISABLING_AOE)
+        -- Update UI:FuryConfig_CheckButtonAoE
+        FuryConfig_CheckButtonAoE:SetChecked(false)
         Fury_Configuration[MODE_HEADER_AOE] = false
     end
 end
@@ -2142,6 +2176,8 @@ function Fury_Togglemode(mode, prefix)
         for i, k in mode do
             Fury_Configuration[k[1]] = Fury_Configuration[prefix..k[1]]
         end
+        -- Update UI:FuryConfig_CheckButtonProt
+        FuryConfig_CheckButtonProt:SetChecked(false)
         Print(prefix.." "..TEXT_FURY_DISABLED..".")
     else
         -- Enable Tank setup
@@ -2150,7 +2186,32 @@ function Fury_Togglemode(mode, prefix)
             Fury_Configuration[prefix..k[1]] = Fury_Configuration[k[1]]
             Fury_Configuration[k[1]] = k[2]
         end
+        -- Update UI:FuryConfig_CheckButtonProt
+        FuryConfig_CheckButtonProt:SetChecked(true)
         Print(prefix.." "..TEXT_FURY_ENABLED..".")
+    end
+end
+
+--------------------------------------------------
+-- Toggle abilities
+function Fury_ToggleAbility(options)
+    local nospace = string.gsub(options, "%s+", "")
+
+    --Print("options: " .. options);
+    --Print("nospace: " .. nospace);
+
+    if Fury_Configuration[options] then
+        Fury_Configuration[options] = false
+        --FuryConfig_CheckButton..nospace:SetChecked(false);
+        getglobal('FuryConfig_CheckButton' .. nospace):SetChecked(false)
+        Print(options.." "..TEXT_FURY_DISABLED..".")
+        return;
+    else
+        Fury_Configuration[options] = true
+        --FuryConfig_CheckButton..nospace:SetChecked(true);
+        getglobal('FuryConfig_CheckButton' .. nospace):SetChecked(true)
+        Print(options.." "..TEXT_FURY_ENABLED..".")
+        return;
     end
 end
 
@@ -2169,25 +2230,35 @@ function Fury_SlashCommand(msg)
                 if options == ABILITY_HEROIC_STRIKE_FURY
                   and not Fury_Configuration[ABILITY_HEROIC_STRIKE_FURY] then
                     Fury_Configuration[ABILITY_HEROIC_STRIKE_FURY] = true
+                    -- Update UI:FuryConfig_CheckButtonHeroicStrike
+                    FuryConfig_CheckButtonHeroicStrike:SetChecked(true)
                     Print(ABILITY_HEROIC_STRIKE_FURY.." "..TEXT_FURY_ENABLED..".")
                     if Fury_Configuration[ABILITY_CLEAVE_FURY] then
                         Fury_Configuration[ABILITY_CLEAVE_FURY] = false
+                        -- Update UI:FuryConfig_CheckButtonHeroicStrike
+                        FuryConfig_CheckButtonHeroicStrike:SetChecked(false)
                         Print(ABILITY_CLEAVE_FURY.." "..TEXT_FURY_DISABLED..".")
                     end
                 elseif options == ABILITY_CLEAVE_FURY
                   and not Fury_Configuration[ABILITY_CLEAVE_FURY] then
                     Fury_Configuration[ABILITY_CLEAVE_FURY] = true
+                    -- Update UI:FuryConfig_CheckButtonCleave
+                    FuryConfig_CheckButtonCleave:SetChecked(true)
                     Print(ABILITY_CLEAVE_FURY.." "..TEXT_FURY_ENABLED..".")
                     if Fury_Configuration[ABILITY_HEROIC_STRIKE_FURY] then
-                        Fury_Configuration[ABILITY_HEROIC_STRIKE_FURY] = falses
+                        Fury_Configuration[ABILITY_HEROIC_STRIKE_FURY] = false
+                        -- Update UI:FuryConfig_CheckButtonHeroicStrike
+                        FuryConfig_CheckButtonHeroicStrike:SetChecked(false)
                         Print(ABILITY_HEROIC_STRIKE_FURY.." "..TEXT_FURY_DISABLED..".")
                     end
                 elseif Fury_Configuration[options] then
-                    Fury_Configuration[options] = false
-                    Print(options.." "..TEXT_FURY_DISABLED..".")
+                    Fury_ToggleAbility(options);
+                    --Fury_Configuration[options] = false
+                    --Print(options.." "..TEXT_FURY_DISABLED..".")
                 elseif Fury_Configuration[options] == false then
-                    Fury_Configuration[options] = true
-                    Print(options.." "..TEXT_FURY_ENABLED..".")
+                    Fury_ToggleAbility(options);
+                    --Fury_Configuration[options] = true
+                    --Print(options.." "..TEXT_FURY_ENABLED..".")
                 else
                     Print(options.." "..TEXT_FURY_NOT_FOUND..".")
                 end
@@ -2195,6 +2266,13 @@ function Fury_SlashCommand(msg)
 
         ["aoe"] = { help = HELP_AOE, fn = function(options)
                 ToggleOption(MODE_HEADER_AOE, MODE_HEADER_AOE)
+                if Fury_Configuration[MODE_HEADER_AOE] then
+                  -- Update UI:FuryConfig_CheckButtonAoE
+                  FuryConfig_CheckButtonAoE:SetChecked(true)
+                else
+                  -- Update UI:FuryConfig_CheckButtonAoE
+                  FuryConfig_CheckButtonAoE:SetChecked(false)
+                end
             end },
 
         ["attack"] = { help = HELP_ATTACK, fn = function(options)

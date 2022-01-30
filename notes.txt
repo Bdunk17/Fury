@@ -23,8 +23,14 @@ Shield Block
 Revenge
 
 
+Heroic Strike Queueing
 
+/stopcasting
+/cast Heroic Strike
+/startattack
 
+/stopcasting
+/startattack
 
 
 MODE_HEADER_AOE

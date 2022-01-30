@@ -20,4 +20,1726 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 			</OnEvent>
 		</Scripts>
 	</Frame>
+
+	<!-- Template for configuration panel tab -->
+	<Button name="Fury_TabButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="115" y="32"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentLeftDisabled" file="Interface\PaperDollInfoFrame\UI-Character-ActiveTab">
+					<Size>
+						<AbsDimension x="20" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="5"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.15625" top="0" bottom="1.0"/>
+				</Texture>
+				<Texture name="$parentMiddleDisabled" file="Interface\PaperDollInfoFrame\UI-Character-ActiveTab">
+					<Size>
+						<AbsDimension x="88" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentLeftDisabled" relativePoint="RIGHT"/>
+					</Anchors>
+					<TexCoords left="0.15625" right="0.84375" top="0" bottom="1.0"/>
+				</Texture>
+				<Texture name="$parentRightDisabled" file="Interface\PaperDollInfoFrame\UI-Character-ActiveTab">
+					<Size>
+						<AbsDimension x="20" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentMiddleDisabled" relativePoint="RIGHT"/>
+					</Anchors>
+					<TexCoords left="0.84375" right="1.0" top="0" bottom="1.0"/>
+				</Texture>
+				<Texture name="$parentLeft" file="Interface\PaperDollInfoFrame\UI-Character-InActiveTab">
+					<Size>
+						<AbsDimension x="20" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+					<TexCoords left="0" right="0.15625" top="0" bottom="1.0"/>
+				</Texture>
+				<Texture name="$parentMiddle" file="Interface\PaperDollInfoFrame\UI-Character-InActiveTab">
+					<Size>
+						<AbsDimension x="88" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
+					</Anchors>
+					<TexCoords left="0.15625" right="0.84375" top="0" bottom="1.0"/>
+				</Texture>
+				<Texture name="$parentRight" file="Interface\PaperDollInfoFrame\UI-Character-InActiveTab">
+					<Size>
+						<AbsDimension x="20" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentMiddle" relativePoint="RIGHT"/>
+					</Anchors>
+					<TexCoords left="0.84375" right="1.0" top="0" bottom="1.0"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick>
+				PanelTemplates_Tab_OnClick(FuryConfig);
+				Fury_ConfigTab_OnClick();
+			</OnClick>
+			<OnShow>
+				PanelTemplates_TabResize(0);
+			</OnShow>
+		</Scripts>
+		<NormalText name="$parentText" inherits="GameFontNormalSmall">
+			<Anchors>
+				<Anchor point="CENTER">
+					<Offset>
+						<AbsDimension x="0" y="2"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</NormalText>
+		<HighlightText name="$parentHighlightText" inherits="GameFontHighlightSmall">
+			<Anchors>
+				<Anchor point="CENTER">
+					<Offset>
+						<AbsDimension x="0" y="2"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</HighlightText>
+		<DisabledText name="$parentDisabledText" inherits="GameFontHighlightSmall">
+			<Anchors>
+				<Anchor point="CENTER">
+					<Offset>
+						<AbsDimension x="0" y="2"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</DisabledText>
+		<HighlightTexture name="$parentHighlightTexture" file="Interface\PaperDollInfoFrame\UI-Character-Tab-Highlight"
+						  alphaMode="ADD">
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="10" y="2"/>
+					</Offset>
+				</Anchor>
+				<Anchor point="RIGHT">
+					<Offset>
+						<AbsDimension x="-10" y="2"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</HighlightTexture>
+	</Button>
+
+	<!-- Configuration Panel -->
+	<Frame name="FuryConfig" frameStrata="DIALOG" toplevel="true" parent="UIParent" hidden="true" movable="true"
+		   enableMouse="true">
+		<Size>
+			<AbsDimension x="600" y="270"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				this:RegisterForDrag("LeftButton");
+				PanelTemplates_SetNumTabs(this, 3);
+				PanelTemplates_SetTab(this, 1);
+				Fury_OnLoad();
+			</OnLoad>
+			<OnEvent>Fury_OnEvent()</OnEvent>
+			<OnDragStart>
+				this:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				this:StopMovingOrSizing();
+			</OnDragStop>
+			<OnHide>
+				FuryHealingBar:Hide();
+			</OnHide>
+			<OnShow>
+				FuryHealingBar:Show();
+			</OnShow>
+		</Scripts>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+				  edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<TileSize>
+				<AbsValue val="32"/>
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32"/>
+			</EdgeSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Layers>
+			<!-- Title -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextTitle" outline="NORMAL" inherits="GameFontNormalLarge"
+							text="(DPS/PROT) MHType() OHType() InCombat() NumEnemies()">
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-30"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<!-- Version string -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextVersion" outline="NORMAL" inherits="GameFontNormalSmall">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-15" y="15"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<FontHeight>
+						<AbsValue val="8"/>
+					</FontHeight>
+					<Color r="1.0" g="1.0" b="1.0"/>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+
+			<!-- General Tab -->
+			<Button name="$parentTab1" inherits="Fury_TabButtonTemplate" id="1" text="General">
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="50" y="-10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<!-- Healing Target Filter Tab -->
+			<Button name="$parentTab2" inherits="Fury_TabButtonTemplate" id="2" text="Subgroup Setup">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTab1" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-15" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<!-- Notification and Messages Tab -->
+			<Button name="$parentTab3" inherits="Fury_TabButtonTemplate" id="3" text="Messages and Notification">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTab2" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-15" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<!-- Close Button -->
+			<Button name="FuryConfig_CloseButton" inherits="UIPanelButtonTemplate" text="OK">
+				<Size>
+					<AbsDimension x="90" y="25"/>
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="60" y="35"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Fury_ToggleConfigurationPanel();
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<!-- Default Button -->
+			<Button name="FuryConfig_DefaultButton" inherits="UIPanelButtonTemplate" text="Default">
+				<Size>
+					<AbsDimension x="90" y="25"/>
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="-60" y="35"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Fury_SetDefaultParameters();
+						FuryConfig:Hide();
+						FuryConfig:Show();
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+
+	<!-- General Options Frame -->
+	<Frame name="FuryConfig_GeneralOptionsFrame" frameStrata="DIALOG" toplevel="true" parent="FuryConfig"
+		   hidden="false">
+		<Size>
+			<AbsDimension x="600" y="270"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
+
+			<!-- ========== -->
+			<!-- MODES TEXT -->
+			<!-- ========== -->
+
+			<!-- ===== -->
+			<!-- COL 1 -->
+			<!-- ===== -->
+
+			<!-- Prot Text C1:1 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextProt" inherits="GameFontNormalLarge" text="Prot">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="60" y="-47"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- AoE Text C1:2 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextAoE" inherits="GameFontNormalLarge" text="AoE">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="60" y="-67"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- ============== -->
+			<!-- ABILITIES TEXT -->
+			<!-- ============== -->
+
+			<!-- ===== -->
+			<!-- COL 2 -->
+			<!-- ===== -->
+
+			<!-- Battle Shout Text C2:1 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextBattleShout" inherits="GameFontNormalLarge" text="Battle Shout">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="-47"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Berserker Rage Text C2:2 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextBerserkerRage" inherits="GameFontNormalLarge" text="Berserker Rage">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="-67"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Bloodrage Text C2:3 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextBloodrage" inherits="GameFontNormalLarge" text="Bloodrage">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="-87"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Bloodthirst Text C2:4 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextBloodthirst" inherits="GameFontNormalLarge" text="Bloodthirst">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="-107"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Charge Text C2:5 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextCharge" inherits="GameFontNormalLarge" text="Charge">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="-127"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Cleave Text C2:6 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextCleave" inherits="GameFontNormalLarge" text="Cleave">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="-147"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Demoralizing Shout Text C2:7 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextDemoralizingShout" inherits="GameFontNormalLarge" text="Demo Shout">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="-167"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Disarm Text C2:8 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextDisarm" inherits="GameFontNormalLarge" text="Disarm">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="-187"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- ===== -->
+			<!-- COL 3 -->
+			<!-- ===== -->
+
+			<!-- Execute Text C3:1 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextExecute" inherits="GameFontNormalLarge" text="Execute">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="340" y="-47"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Hamstring Text C3:2 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextHamstring" inherits="GameFontNormalLarge" text="Hamstring">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="340" y="-67"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Piercing Howl Text C3:3 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextPiercingHowl" inherits="GameFontNormalLarge" text="Piercing Howl">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="340" y="-87"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Heroic Strike Text C3:4 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextHeroicStrike" inherits="GameFontNormalLarge" text="Heroic Strike">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="340" y="-107"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Intercept Text C3:5 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextIntercept" inherits="GameFontNormalLarge" text="Intercept">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="340" y="-127"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Mortal Strike Text C3:6 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextMortalStrike" inherits="GameFontNormalLarge" text="Mortal Strike">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="340" y="-147"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Sweeping Strikes Text C3:7 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextSweepingStrikes" inherits="GameFontNormalLarge" text="Sweeping Strikes">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="340" y="-167"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Overpower Text C3:7 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextOverpower" inherits="GameFontNormalLarge" text="Overpower">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="340" y="-187"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- ===== -->
+			<!-- COL 4 -->
+			<!-- ===== -->
+
+			<!-- Pummel Text C4:1 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextPummel" inherits="GameFontNormalLarge" text="Pummel">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="480" y="-47"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Rend Text C4:2 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextRend" inherits="GameFontNormalLarge" text="Rend">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="480" y="-67"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Shield Bash Text C4:3 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextShieldBash" inherits="GameFontNormalLarge" text="Shield Bash">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="480" y="-87"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Shield Slam Text C4:4 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextShieldSlam" inherits="GameFontNormalLarge" text="Shield Slam">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="480" y="-107"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Death Wish Text C4:5 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextDeathWish" inherits="GameFontNormalLarge" text="Death Wish">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="480" y="-127"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Thunder Clap Text C4:6 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextThunderClap" inherits="GameFontNormalLarge" text="Thunder Clap">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="480" y="-147"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Whirlwind Text C4:7 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextWhirlwind" inherits="GameFontNormalLarge" text="Whirlwind">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="480" y="-167"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- Revenge Text C4:8 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextRevenge" inherits="GameFontNormalLarge" text="Revenge">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="480" y="-187"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+		</Layers>
+		<Frames>
+
+			<!-- ============== -->
+			<!-- MODES CHECKBOX -->
+			<!-- ============== -->
+
+			<!-- ===== -->
+			<!-- COL 1 -->
+			<!-- ===== -->
+
+			<!-- Prot Checkbutton C1:1 -->
+			<CheckButton name="FuryConfig_CheckButtonProt" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="30" y="-40"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[MODE_HEADER_PROT] = true;
+						else
+						Fury_Configuration[MODE_HEADER_PROT] = false;
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[MODE_HEADER_PROT] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Use threat and defensive abilities");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Aoe Checkbutton C1:2 -->
+			<CheckButton name="FuryConfig_CheckButtonAoE" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="30" y="-60"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[MODE_HEADER_AOE] = true;
+						else
+						Fury_Configuration[MODE_HEADER_AOE] = false;
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[MODE_HEADER_AOE] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Disable auto use of aoe (Disables OP, HS, BT, Exe, Enables Cleave, Whirlwind)");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- ================== -->
+			<!-- ABILITIES CHECKBOX -->
+			<!-- ================== -->
+
+			<!-- ===== -->
+			<!-- COL 2 -->
+			<!-- ===== -->
+
+			<!-- Battle Shout Checkbutton C2:1 -->
+			<CheckButton name="FuryConfig_CheckButtonBattleShout" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="170" y="-40"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_BATTLE_SHOUT_FURY] = true;
+						Print("Fury: ".."Battle Shout "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_BATTLE_SHOUT_FURY] = false;
+						Print("Fury: ".."Battle Shout "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_BATTLE_SHOUT_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Battle Shout");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Berserker Rage Checkbutton C2:2 -->
+			<CheckButton name="FuryConfig_CheckButtonBerserkerRage" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="170" y="-60"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_BERSERKER_RAGE_FURY] = true;
+						Print("Fury: ".."Berserker Rage "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_BERSERKER_RAGE_FURY] = false;
+						Print("Fury: ".."Berserker Rage "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_BERSERKER_RAGE_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Berserker Rage");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Bloodrage Checkbutton C2:3 -->
+			<CheckButton name="FuryConfig_CheckButtonBloodrage" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="170" y="-80"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_BLOODRAGE_FURY] = true;
+						Print("Fury: ".."Bloodrage "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_BLOODRAGE_FURY] = false;
+						Print("Fury: ".."Bloodrage "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_BLOODRAGE_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Bloodrage");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Bloodthirst Checkbutton C2:4 -->
+			<CheckButton name="FuryConfig_CheckButtonBloodthirst" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="170" y="-100"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_BLOODTHIRST_FURY] = true;
+						Print("Fury: ".."Bloodthirst "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_BLOODTHIRST_FURY] = false;
+						Print("Fury: ".."Bloodthirst "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_BLOODTHIRST_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Bloodthirst");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Charge Checkbutton C2:5 -->
+			<CheckButton name="FuryConfig_CheckButtonCharge" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="170" y="-120"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_CHARGE_FURY] = true;
+						Print("Fury: ".."Charge "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_CHARGE_FURY] = false;
+						Print("Fury: ".."Charge "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_CHARGE_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Charge");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Cleave Checkbutton C2:6 -->
+			<CheckButton name="FuryConfig_CheckButtonCleave" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="170" y="-140"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_CLEAVE_FURY] = true;
+						Print("Fury: ".."Cleave "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_CLEAVE_FURY] = false;
+						Print("Fury: ".."Cleave "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_CLEAVE_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Cleave");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Demoralizing Shout Checkbutton C2:7 -->
+			<CheckButton name="FuryConfig_CheckButtonDemoralizingShout" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="170" y="-160"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_DEMORALIZING_SHOUT_FURY] = true;
+						Print("Fury: ".."Demoralizing Shout "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_DEMORALIZING_SHOUT_FURY] = false;
+						Print("Fury: ".."Demoralizing Shout "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_DEMORALIZING_SHOUT_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Demoralizing Shout");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Disarm Checkbutton C2:8 -->
+			<CheckButton name="FuryConfig_CheckButtonDisarm" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="170" y="-180"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_DISARM_FURY] = true;
+						Print("Fury: ".."Disarm "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_DISARM_FURY] = false;
+						Print("Fury: ".."Disarm "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_DISARM_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Disarm");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- ===== -->
+			<!-- COL 3 -->
+			<!-- ===== -->
+
+			<!-- Execute Checkbutton C3:1 -->
+			<CheckButton name="FuryConfig_CheckButtonExecute" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="310" y="-40"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_EXECUTE_FURY] = true;
+						Print("Fury: ".."Execute "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_EXECUTE_FURY] = false;
+						Print("Fury: ".."Execute "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_EXECUTE_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Execute");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Hamstring Checkbutton C3:2 -->
+			<CheckButton name="FuryConfig_CheckButtonHamstring" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="310" y="-60"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_HAMSTRING_FURY] = true;
+						Print("Fury: ".."Hamstring "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_HAMSTRING_FURY] = false;
+						Print("Fury: ".."Hamstring "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_HAMSTRING_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Hamstring");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Piercing Howl Checkbutton C3:3 -->
+			<CheckButton name="FuryConfig_CheckButtonPiercingHowl" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="310" y="-80"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_PIERCING_HOWL_FURY] = true;
+						Print("Fury: ".."Piercing Howl "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_PIERCING_HOWL_FURY] = false;
+						Print("Fury: ".."Piercing Howl "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_PIERCING_HOWL_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Piercing Howl");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Heroic Strike Checkbutton C3:4 -->
+			<CheckButton name="FuryConfig_CheckButtonHeroicStrike" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="310" y="-100"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_HEROIC_STRIKE_FURY] = true;
+						Print("Fury: ".."Heroic Strike "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_HEROIC_STRIKE_FURY] = false;
+						Print("Fury: ".."Heroic Strike "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_HEROIC_STRIKE_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Heroic Strike");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Intercept Checkbutton C3:5 -->
+			<CheckButton name="FuryConfig_CheckButtonIntercept" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="310" y="-120"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_INTERCEPT_FURY] = true;
+						Print("Fury: ".."Intercept "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_INTERCEPT_FURY] = false;
+						Print("Fury: ".."Intercept "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_INTERCEPT_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Intercept");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Mortal Strike Checkbutton C3:6 -->
+			<CheckButton name="FuryConfig_CheckButtonMortalStrike" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="310" y="-140"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_MORTAL_STRIKE_FURY] = true;
+						Print("Fury: ".."Mortal Strike "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_MORTAL_STRIKE_FURY] = false;
+						Print("Fury: ".."Mortal Strike "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_MORTAL_STRIKE_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Mortal Strike");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Sweeping Strikes Checkbutton C3:7 -->
+			<CheckButton name="FuryConfig_CheckButtonSweepingStrikes" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="310" y="-160"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_SWEEPING_STRIKES_FURY] = true;
+						Print("Fury: ".."Sweeping Strikes "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_SWEEPING_STRIKES_FURY] = false;
+						Print("Fury: ".."Sweeping Strikes "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_SWEEPING_STRIKES_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Sweeping Strikes");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Overpower Checkbutton C3:8 -->
+			<CheckButton name="FuryConfig_CheckButtonOverpower" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="310" y="-180"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_OVERPOWER_FURY] = true;
+						Print("Fury: ".."Overpower "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_OVERPOWER_FURY] = false;
+						Print("Fury: ".."Overpower "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_OVERPOWER_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Overpower");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- ===== -->
+			<!-- COL 3 -->
+			<!-- ===== -->
+
+			<!-- Pummel Checkbutton C4:1 -->
+			<CheckButton name="FuryConfig_CheckButtonPummel" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="450" y="-40"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_PUMMEL_FURY] = true;
+						Print("Fury: ".."Pummel "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_PUMMEL_FURY] = false;
+						Print("Fury: ".."Pummel "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_PUMMEL_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Pummel");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Rend Checkbutton C4:2 -->
+			<CheckButton name="FuryConfig_CheckButtonRend" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="450" y="-60"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_REND_FURY] = true;
+						Print("Fury: ".."Rend "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_REND_FURY] = false;
+						Print("Fury: ".."Rend "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_REND_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Rend");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Shield Bash Checkbutton C4:3 -->
+			<CheckButton name="FuryConfig_CheckButtonShieldBash" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="450" y="-80"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_SHIELD_BASH_FURY] = true;
+						Print("Fury: ".."Shield Bash "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_SHIELD_BASH_FURY] = false;
+						Print("Fury: ".."Shield Bash "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_SHIELD_BASH_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Shield Bash");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Shield Slam Checkbutton C4:4 -->
+			<CheckButton name="FuryConfig_CheckButtonShieldSlam" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="450" y="-100"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_SHIELD_SLAM_FURY] = true;
+						Print("Fury: ".."Shield Slam "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_SHIELD_SLAM_FURY] = false;
+						Print("Fury: ".."Shield Slam "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_SHIELD_SLAM_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Shield Slam");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Death Wish Checkbutton C4:5 -->
+			<CheckButton name="FuryConfig_CheckButtonDeathWish" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="450" y="-120"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_DEATH_WISH_FURY] = true;
+						Print("Fury: ".."Death Wish "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_DEATH_WISH_FURY] = false;
+						Print("Fury: ".."Death Wish "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_DEATH_WISH_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Death Wish");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Thunder Clap Checkbutton C4:6 -->
+			<CheckButton name="FuryConfig_CheckButtonThunderClap" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="450" y="-140"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_THUNDER_CLAP_FURY] = true;
+						Print("Fury: ".."Thunder Clap "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_THUNDER_CLAP_FURY] = false;
+						Print("Fury: ".."Thunder Clap "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_THUNDER_CLAP_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Thunder Clap");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Whirlwind Checkbutton C4:7 -->
+			<CheckButton name="FuryConfig_CheckButtonWhirlwind" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="450" y="-160"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_WHIRLWIND_FURY] = true;
+						Print("Fury: ".."Whirlwind "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_WHIRLWIND_FURY] = false;
+						Print("Fury: ".."Whirlwind "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_WHIRLWIND_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Whirlwind");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Revenge Checkbutton C4:8 -->
+			<CheckButton name="FuryConfig_CheckButtonRevenge" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="450" y="-180"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_REVENGE_FURY] = true;
+						Print("Fury: ".."Revenge "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ABILITY_REVENGE_FURY] = false;
+						Print("Fury: ".."Revenge "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_REVENGE_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Revenge");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+		</Frames>
+	</Frame>
+
+	<!-- Healing Target Filter Options Frame -->
+	<Frame name="FuryConfig_HealingTargetFilterFrame" frameStrata="DIALOG" toplevel="true" parent="FuryConfig"
+		   hidden="true">
+		<Size>
+			<AbsDimension x="600" y="270"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+
+			</Layer>
+
+		</Layers>
+		<Frames>
+
+
+		</Frames>
+	</Frame>
+
+	<!-- Messages and Notification Options Frame -->
+	<Frame name="FuryConfig_MessagesAndNotificationFrame" frameStrata="DIALOG" toplevel="true"
+		   parent="FuryConfig" hidden="true">
+		<Size>
+			<AbsDimension x="600" y="270"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
+
+		</Layers>
+		<Frames>
+
+		</Frames>
+	</Frame>
+
+
+
+
 </Ui>
