@@ -30,7 +30,7 @@ local function DoUpdateConfiguration(defaults)
       {"MaximumRage", 60},        -- Set this to the maximum amount of rage allowed when using abilities to increase rage
       {"NextAttackRage", 30},     -- Set this to the minimum rage to have to use next attack abilities (Cleave and Heroic Strike)
       {"StanceChangeRage", 25},   -- Set this to the amount of rage allowed to be wasted when switching stances
-      {"PrimaryStance", 3},   -- Set this to the stance to fall back to after performing an attack requiring another stance
+      {"PrimaryStance", false},   -- Set this to the stance to fall back to after performing an attack requiring another stance
 
       {MODE_HEADER_PROT, false },              -- Use threat and defensive abilities
       {MODE_HEADER_AOE, false},                -- Disable auto use of aoe (Disables OP, HS, BT, Exe, Enablse Cleave, Whirlwind)
@@ -132,6 +132,14 @@ function Fury_ToggleConfigurationPanel()
         FuryConfig:Show();
     end
 end
+
+function Fury_RefreshConfigurationPanel()
+    if FuryConfig:IsShown() then
+        FuryConfig:Hide();
+        FuryConfig:Show();
+    end
+end
+
 
 --------------------------------------------------
 --
@@ -2119,8 +2127,10 @@ local function ToggleOption(option, text)
         Fury_Configuration[option] = true
         Print(text.." "..TEXT_FURY_ENABLED..".")
     else
+        Fury_RefreshConfigurationPanel()
         return false
     end
+    Fury_RefreshConfigurationPanel()
     return true
 end
 
@@ -2175,6 +2185,7 @@ function Fury_Togglemode(mode, prefix)
         end
         -- Update UI:FuryConfig_CheckButtonProt
         FuryConfig_CheckButtonProt:SetChecked(false)
+        Fury_RefreshConfigurationPanel()
         Print(prefix.." "..TEXT_FURY_DISABLED..".")
     else
         -- Enable Tank setup
@@ -2185,6 +2196,7 @@ function Fury_Togglemode(mode, prefix)
         end
         -- Update UI:FuryConfig_CheckButtonProt
         FuryConfig_CheckButtonProt:SetChecked(true)
+        Fury_RefreshConfigurationPanel()
         Print(prefix.." "..TEXT_FURY_ENABLED..".")
     end
 end
@@ -2200,13 +2212,15 @@ function Fury_ToggleAbility(options)
     if Fury_Configuration[options] then
         Fury_Configuration[options] = false
         --FuryConfig_CheckButton..nospace:SetChecked(false);
-        getglobal('FuryConfig_CheckButton' .. nospace):SetChecked(false)
+        --getglobal('FuryConfig_CheckButton' .. nospace):SetChecked(false)
+        --Fury_RefreshConfigurationPanel()
         Print(options.." "..TEXT_FURY_DISABLED..".")
         return;
     else
         Fury_Configuration[options] = true
         --FuryConfig_CheckButton..nospace:SetChecked(true);
-        getglobal('FuryConfig_CheckButton' .. nospace):SetChecked(true)
+        --getglobal('FuryConfig_CheckButton' .. nospace):SetChecked(true)
+        --Fury_RefreshConfigurationPanel()
         Print(options.." "..TEXT_FURY_ENABLED..".")
         return;
     end
@@ -2259,6 +2273,7 @@ function Fury_SlashCommand(msg)
                 else
                     Print(options.." "..TEXT_FURY_NOT_FOUND..".")
                 end
+                Fury_RefreshConfigurationPanel()
             end },
 
         ["aoe"] = { help = HELP_AOE, fn = function(options)
@@ -2271,6 +2286,10 @@ function Fury_SlashCommand(msg)
                   FuryConfig_CheckButtonAoE:SetChecked(false)
                 end
             end },
+
+        ["prot"] = { help = HELP_PROT, fn = function()
+            Fury_Togglemode(tankmode, MODE_HEADER_PROT)
+        end },
 
         ["attack"] = { help = HELP_ATTACK, fn = function(options)
                 ToggleOption("AutoAttack", SLASH_FURY_AUTOATTACK)
@@ -2397,9 +2416,7 @@ function Fury_SlashCommand(msg)
                 ToggleOption(ITEM_CONS_OIL_OF_IMMOLATION, ITEM_CONS_OIL_OF_IMMOLATION)
             end },
 
-        ["prot"] = { help = HELP_PROT, fn = function()
-                Fury_Togglemode(tankmode, MODE_HEADER_PROT)
-            end },
+
 
         ["rage"] = { help = HELP_RAGE, fn = function(options)
                 SetOptionRange("MaximumRage", SLASH_FURY_RAGE, options, 0, 100)

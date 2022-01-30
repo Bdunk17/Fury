@@ -165,10 +165,10 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 				this:StopMovingOrSizing();
 			</OnDragStop>
 			<OnHide>
-				FuryHealingBar:Hide();
+				--FuryHealingBar:Hide();
 			</OnHide>
 			<OnShow>
-				FuryHealingBar:Show();
+				--FuryHealingBar:Show();
 			</OnShow>
 		</Scripts>
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
@@ -187,7 +187,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 			<!-- Title -->
 			<Layer level="ARTWORK">
 				<FontString name="FuryConfig_TextTitle" outline="NORMAL" inherits="GameFontNormalLarge"
-							text="(DPS/PROT) MHType() OHType() InCombat() NumEnemies()">
+							text="(DPS/PROT) (STANCE) MHType() OHType() InCombat() NumEnemies()">
 					<Anchors>
 						<Anchor point="CENTER" relativePoint="TOP">
 							<Offset>
@@ -1739,6 +1739,68 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 		</Frames>
 	</Frame>
 
+	<Button name="Fury_Minimap" movable="true" parent="UIParent" enableMouse="true" toplevel="true"
+			frameStrata="LOW">
+		<Size x="33" y="33"/>
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="Minimap" relativePoint="LEFT"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture file="Interface\Icons\Spell_Nature_BloodLust">
+					<Size x="21" y="21"/>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="7" y="-6"/>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+					<Size x="56" y="56"/>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+		<Scripts>
+			<OnLoad>
+				this:RegisterForClicks("RightButtonUp")
+				this:RegisterForDrag("LeftButton")
+				this:SetClampedToScreen(true)
+			</OnLoad>
+			<OnDragStart>
+				this:LockHighlight()
+				this:StartMoving()
+			</OnDragStart>
+			<OnDragStop>
+				this:UnlockHighlight()
+				this:StopMovingOrSizing()
+			</OnDragStop>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 0, 0)
+				GameTooltip:AddLine('Fury', 1, 1, 1)
+				GameTooltip:AddLine('Left-click to toggle frame')
+				--                            GameTooltip:AddLine('Right-click for options')
+				--                            GameTooltip:AddLine(DPSMate.L["minimapright"], 0.5, 0.5, 0.5)
+				GameTooltip:Show()
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide()
+			</OnLeave>
+			<OnMouseUp>
+				if arg1 == "LeftButton" then
+				Fury_ToggleConfigurationPanel();
+				--                            else
+				--                                ShowTWAMinimapDropdown()
+				end
+			</OnMouseUp>
+		</Scripts>
+	</Button>
 
 
 
