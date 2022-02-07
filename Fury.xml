@@ -197,6 +197,23 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 					</Anchors>
 				</FontString>
 			</Layer>
+
+
+
+			<!-- NumEnemies -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextNumEnemies" outline="NORMAL" inherits="GameFontNormalLarge"
+							text="NumEnemies()">
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="TOP">
+							<Offset>
+								<AbsDimension x="100" y="-50"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
 			<!-- Version string -->
 			<Layer level="ARTWORK">
 				<FontString name="FuryConfig_TextVersion" outline="NORMAL" inherits="GameFontNormalSmall">
@@ -226,8 +243,8 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 					</Anchor>
 				</Anchors>
 			</Button>
-			<!-- Healing Target Filter Tab -->
-			<Button name="$parentTab2" inherits="Fury_TabButtonTemplate" id="2" text="Subgroup Setup">
+			<!-- Abilities Tab -->
+			<Button name="$parentTab2" inherits="Fury_TabButtonTemplate" id="2" text="Abilities">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTab1" relativePoint="TOPRIGHT">
 						<Offset>
@@ -332,6 +349,141 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 					</Anchors>
 				</FontString>
 			</Layer>
+
+
+
+		</Layers>
+		<Frames>
+
+			<!-- ============== -->
+			<!-- MODES CHECKBOX -->
+			<!-- ============== -->
+
+			<!-- ===== -->
+			<!-- COL 1 -->
+			<!-- ===== -->
+
+			<!-- Prot Checkbutton C1:1 -->
+			<CheckButton name="FuryConfig_CheckButtonProt" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="30" y="-40"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[MODE_HEADER_PROT] = true;
+						else
+						Fury_Configuration[MODE_HEADER_PROT] = false;
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[MODE_HEADER_PROT] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Use threat and defensive abilities");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- Aoe Checkbutton C1:2 -->
+			<CheckButton name="FuryConfig_CheckButtonAoE" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="30" y="-60"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[MODE_HEADER_AOE] = true;
+						else
+						Fury_Configuration[MODE_HEADER_AOE] = false;
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[MODE_HEADER_AOE] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Disable auto use of aoe (Disables OP, HS, BT, Exe, Enables Cleave, Whirlwind)");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+		</Frames>
+	</Frame>
+
+	<!-- Healing Target Filter Options Frame -->
+	<Frame name="FuryConfig_AbilitiesFrame" frameStrata="DIALOG" toplevel="true" parent="FuryConfig"
+		   hidden="true">
+		<Size>
+			<AbsDimension x="600" y="270"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
+
+			<!-- ========== -->
+			<!-- MODES TEXT -->
+			<!-- ========== -->
+
+			<!-- ===== -->
+			<!-- COL 1 -->
+			<!-- ===== -->
+
+			<!-- Prot Text C1:1 -->
+<!--			<Layer level="ARTWORK">-->
+<!--				<FontString name="FuryConfig_TextProt" inherits="GameFontNormalLarge" text="Prot">-->
+<!--					<Anchors>-->
+<!--						<Anchor point="TOPLEFT">-->
+<!--							<Offset>-->
+<!--								<AbsDimension x="60" y="-47"/>-->
+<!--							</Offset>-->
+<!--						</Anchor>-->
+<!--					</Anchors>-->
+<!--				</FontString>-->
+<!--			</Layer>-->
+
+			<!-- AoE Text C1:2 -->
+<!--			<Layer level="ARTWORK">-->
+<!--				<FontString name="FuryConfig_TextAoE" inherits="GameFontNormalLarge" text="AoE">-->
+<!--					<Anchors>-->
+<!--						<Anchor point="TOPLEFT">-->
+<!--							<Offset>-->
+<!--								<AbsDimension x="60" y="-67"/>-->
+<!--							</Offset>-->
+<!--						</Anchor>-->
+<!--					</Anchors>-->
+<!--				</FontString>-->
+<!--			</Layer>-->
 
 			<!-- ============== -->
 			<!-- ABILITIES TEXT -->
@@ -673,78 +825,78 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 			<!-- ===== -->
 
 			<!-- Prot Checkbutton C1:1 -->
-			<CheckButton name="FuryConfig_CheckButtonProt" inherits="OptionsCheckButtonTemplate"
-						 checked="false">
-				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="30" y="-40"></AbsDimension>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<onClick>
-						if this:GetChecked() then
-						Fury_Configuration[MODE_HEADER_PROT] = true;
-						else
-						Fury_Configuration[MODE_HEADER_PROT] = false;
-						end
-					</onClick>
-					<OnShow>
-						if Fury_Configuration[MODE_HEADER_PROT] then
-						this:SetChecked(true);
-						else
-						this:SetChecked(false);
-						end
-					</OnShow>
-					<OnEnter>
-						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
-						GameTooltip:SetText("Use threat and defensive abilities");
-						this.tooltipShown = true;
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide();
-						this.tooltipShown = false;
-					</OnLeave>
-				</Scripts>
-			</CheckButton>
+<!--			<CheckButton name="FuryConfig_CheckButtonProt" inherits="OptionsCheckButtonTemplate"-->
+<!--						 checked="false">-->
+<!--				<Anchors>-->
+<!--					<Anchor point="TOPLEFT">-->
+<!--						<Offset>-->
+<!--							<AbsDimension x="30" y="-40"></AbsDimension>-->
+<!--						</Offset>-->
+<!--					</Anchor>-->
+<!--				</Anchors>-->
+<!--				<Scripts>-->
+<!--					<onClick>-->
+<!--						if this:GetChecked() then-->
+<!--						Fury_Configuration[MODE_HEADER_PROT] = true;-->
+<!--						else-->
+<!--						Fury_Configuration[MODE_HEADER_PROT] = false;-->
+<!--						end-->
+<!--					</onClick>-->
+<!--					<OnShow>-->
+<!--						if Fury_Configuration[MODE_HEADER_PROT] then-->
+<!--						this:SetChecked(true);-->
+<!--						else-->
+<!--						this:SetChecked(false);-->
+<!--						end-->
+<!--					</OnShow>-->
+<!--					<OnEnter>-->
+<!--						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");-->
+<!--						GameTooltip:SetText("Use threat and defensive abilities");-->
+<!--						this.tooltipShown = true;-->
+<!--					</OnEnter>-->
+<!--					<OnLeave>-->
+<!--						GameTooltip:Hide();-->
+<!--						this.tooltipShown = false;-->
+<!--					</OnLeave>-->
+<!--				</Scripts>-->
+<!--			</CheckButton>-->
 
 			<!-- Aoe Checkbutton C1:2 -->
-			<CheckButton name="FuryConfig_CheckButtonAoE" inherits="OptionsCheckButtonTemplate"
-						 checked="false">
-				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="30" y="-60"></AbsDimension>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<onClick>
-						if this:GetChecked() then
-						Fury_Configuration[MODE_HEADER_AOE] = true;
-						else
-						Fury_Configuration[MODE_HEADER_AOE] = false;
-						end
-					</onClick>
-					<OnShow>
-						if Fury_Configuration[MODE_HEADER_AOE] then
-						this:SetChecked(true);
-						else
-						this:SetChecked(false);
-						end
-					</OnShow>
-					<OnEnter>
-						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
-						GameTooltip:SetText("Disable auto use of aoe (Disables OP, HS, BT, Exe, Enables Cleave, Whirlwind)");
-						this.tooltipShown = true;
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide();
-						this.tooltipShown = false;
-					</OnLeave>
-				</Scripts>
-			</CheckButton>
+<!--			<CheckButton name="FuryConfig_CheckButtonAoE" inherits="OptionsCheckButtonTemplate"-->
+<!--						 checked="false">-->
+<!--				<Anchors>-->
+<!--					<Anchor point="TOPLEFT">-->
+<!--						<Offset>-->
+<!--							<AbsDimension x="30" y="-60"></AbsDimension>-->
+<!--						</Offset>-->
+<!--					</Anchor>-->
+<!--				</Anchors>-->
+<!--				<Scripts>-->
+<!--					<onClick>-->
+<!--						if this:GetChecked() then-->
+<!--						Fury_Configuration[MODE_HEADER_AOE] = true;-->
+<!--						else-->
+<!--						Fury_Configuration[MODE_HEADER_AOE] = false;-->
+<!--						end-->
+<!--					</onClick>-->
+<!--					<OnShow>-->
+<!--						if Fury_Configuration[MODE_HEADER_AOE] then-->
+<!--						this:SetChecked(true);-->
+<!--						else-->
+<!--						this:SetChecked(false);-->
+<!--						end-->
+<!--					</OnShow>-->
+<!--					<OnEnter>-->
+<!--						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");-->
+<!--						GameTooltip:SetText("Disable auto use of aoe (Disables OP, HS, BT, Exe, Enables Cleave, Whirlwind)");-->
+<!--						this.tooltipShown = true;-->
+<!--					</OnEnter>-->
+<!--					<OnLeave>-->
+<!--						GameTooltip:Hide();-->
+<!--						this.tooltipShown = false;-->
+<!--					</OnLeave>-->
+<!--				</Scripts>-->
+<!--			</CheckButton>-->
 
 			<!-- ================== -->
 			<!-- ABILITIES CHECKBOX -->
@@ -1697,27 +1849,6 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-
-		</Frames>
-	</Frame>
-
-	<!-- Healing Target Filter Options Frame -->
-	<Frame name="FuryConfig_HealingTargetFilterFrame" frameStrata="DIALOG" toplevel="true" parent="FuryConfig"
-		   hidden="true">
-		<Size>
-			<AbsDimension x="600" y="270"/>
-		</Size>
-		<Anchors>
-			<Anchor point="CENTER"/>
-		</Anchors>
-		<Layers>
-			<Layer level="ARTWORK">
-
-			</Layer>
-
-		</Layers>
-		<Frames>
-
 
 		</Frames>
 	</Frame>

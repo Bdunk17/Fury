@@ -114,12 +114,15 @@ end
 function Fury_ConfigTab_OnClick()
     if this:GetName() == "FuryConfigTab1" then
         FuryConfig_GeneralOptionsFrame:Show();
+        FuryConfig_AbilitiesFrame:Hide();
         FuryConfig_MessagesAndNotificationFrame:Hide();
     elseif this:GetName() == "FuryConfigTab2" then
         FuryConfig_GeneralOptionsFrame:Hide();
+        FuryConfig_AbilitiesFrame:Show();
         FuryConfig_MessagesAndNotificationFrame:Hide();
     elseif this:GetName() == "FuryConfigTab3" then
         FuryConfig_GeneralOptionsFrame:Hide();
+        FuryConfig_AbilitiesFrame:Hide();
         FuryConfig_MessagesAndNotificationFrame:Show();
     end
     PlaySound("igCharacterInfoTab");
