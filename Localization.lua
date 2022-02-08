@@ -229,6 +229,7 @@ TEXT_FURY_CLASS                = " Class: "
 TEXT_FURY_CLASSIFICATION       = " Classification: "
 TEXT_FURY_RACE                 = "Race: "
 TEXT_FURY_TYPE                 = "Type: "
+TEXT_FURY_JOINED_RAID          = "You have joined a raid group"
 
 CHAT_IS_ON_CD_FURY                       = "is on CD, replace?"
 CHAT_DISABLING_AOE_FURY                  = "Disabling AoE"

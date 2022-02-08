@@ -30,7 +30,7 @@ local function DoUpdateConfiguration(defaults)
       {"MaximumRage", 60},        -- Set this to the maximum amount of rage allowed when using abilities to increase rage
       {"NextAttackRage", 30},     -- Set this to the minimum rage to have to use next attack abilities (Cleave and Heroic Strike)
       {"StanceChangeRage", 25},   -- Set this to the amount of rage allowed to be wasted when switching stances
-      {"PrimaryStance", false},   -- Set this to the stance to fall back to after performing an attack requiring another stance
+      {"PrimaryStance", 3},   -- Set this to the stance to fall back to after performing an attack requiring another stance
 
       {MODE_HEADER_PROT, false },              -- Use threat and defensive abilities
       {MODE_HEADER_AOE, false},                -- Disable auto use of aoe (Disables OP, HS, BT, Exe, Enablse Cleave, Whirlwind)
@@ -102,6 +102,10 @@ local function Fury_Configuration_Init()
         Fury_ImmuneDisarm = { }
     end
     DoUpdateConfiguration(false) -- Set to value if nil
+
+    inRaid = GetNumRaidMembers() > 0;
+    inGroup = not inRaid and GetNumPartyMembers() > 0;
+    isSolo = not inRaid and not inGroup;
 
     FuryConfig:Show();
 end
@@ -1373,6 +1377,19 @@ function Fury()
             FuryLastSunder = GetTime()
             FuryLastSpellCast = GetTime()
 
+        -- Sunder Armor (raid group)
+        elseif not Fury_Configuration[ABILITY_SUNDER_ARMOR_FURY]
+          and not HasDebuff("target", "Ability_Warrior_Sunder", 5)
+          and UnitMana("player") >= 15
+          and HaveNotSunderedYet
+          and inRaid
+          and IsSpellReady(ABILITY_SUNDER_ARMOR_FURY) then
+            Debug("27. Sunder Armor (raid group) inRaid: " .. tostring(inRaid))
+            CastSpellByName(ABILITY_SUNDER_ARMOR_FURY)
+            FuryLastSunder = GetTime()
+            FuryLastSpellCast = GetTime()
+            HaveNotSunderedYet = false
+
         -- Battle Shout
         elseif Fury_Configuration[ABILITY_BATTLE_SHOUT_FURY]
           and not HasBuff("player", "Ability_Warrior_BattleShout")
@@ -2218,6 +2235,7 @@ function Fury_Togglemode(mode, prefix)
         -- Update UI:FuryConfig_CheckButtonProt
         FuryConfig_CheckButtonProt:SetChecked(false)
         Fury_RefreshConfigurationPanel()
+        Fury_Configuration["PrimaryStance"] = 3
         Print(prefix.." "..TEXT_FURY_DISABLED..".")
     else
         -- Enable Tank setup
@@ -2229,6 +2247,7 @@ function Fury_Togglemode(mode, prefix)
         -- Update UI:FuryConfig_CheckButtonProt
         FuryConfig_CheckButtonProt:SetChecked(true)
         Fury_RefreshConfigurationPanel()
+        Fury_Configuration["PrimaryStance"] = 2
         Print(prefix.." "..TEXT_FURY_ENABLED..".")
     end
 end
@@ -2582,6 +2601,7 @@ function Fury_OnLoad()
         "CHAT_MSG_SPELL_HOSTILEPLAYER_DAMAGE",
         "CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE",
         "CHAT_MSG_SPELL_SELF_DAMAGE",
+        "RAID_ROSTER_UPDATE",
         "PLAYER_AURAS_CHANGED",
         "PLAYER_ENTER_COMBAT",
         "PLAYER_ENTERING_WORLD",
@@ -2746,6 +2766,12 @@ function Fury_OnEvent(event)
         -- Check to see if enemy flees
         Fury_RunnerDetect(arg1, arg2)
 
+    elseif event == "RAID_ROSTER_UPDATE" then
+        -- Update raid/party/solo status variables
+        inRaid = GetNumRaidMembers() > 0;
+        inGroup = not inRaid and GetNumPartyMembers() > 0;
+        isSolo = not inRaid and not inGroup;
+
     elseif event == "PLAYER_AURAS_CHANGED" then
         -- Check to see if mounted
         if UnitIsMounted("player") then
@@ -2819,6 +2845,7 @@ function Fury_OnEvent(event)
         FuryAttack = true
         FuryAttackEnd = nil
         FuryAttackStart = GetTime()
+        HaveNotSunderedYet = true
         if HasBuff("player", "Ability_GhoulFrenzy") then
             FuryFlurryStart = GetTime()
         end

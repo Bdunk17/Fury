@@ -361,8 +361,10 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 					<onClick>
 						if this:GetChecked() then
 						Fury_Configuration[MODE_HEADER_PROT] = true;
+						Print("Fury: ".."Prot "..TEXT_FURY_ENABLED..".")
 						else
 						Fury_Configuration[MODE_HEADER_PROT] = false;
+						Print("Fury: ".."Prot "..TEXT_FURY_DISABLED..".")
 						end
 					</onClick>
 					<OnShow>
@@ -398,8 +400,10 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 					<onClick>
 						if this:GetChecked() then
 						Fury_Configuration[MODE_HEADER_AOE] = true;
+						Print("Fury: ".."AoE "..TEXT_FURY_ENABLED..".")
 						else
 						Fury_Configuration[MODE_HEADER_AOE] = false;
+						Print("Fury: ".."AoE "..TEXT_FURY_DISABLED..".")
 						end
 					</onClick>
 					<OnShow>
@@ -895,7 +899,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 <!--				</Scripts>-->
 <!--			</CheckButton>-->
 
-			<!-- Aoe Checkbutton C1:8 -->
+			<!-- Sunder Armor Checkbutton C1:8 -->
 			<CheckButton name="FuryConfig_CheckButtonSunderArmor" inherits="OptionsCheckButtonTemplate"
 						 checked="false">
 				<Anchors>
@@ -909,8 +913,10 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 					<onClick>
 						if this:GetChecked() then
 						Fury_Configuration[ABILITY_SUNDER_ARMOR_FURY] = true;
+						Print("Fury: ".."Sunder Armor "..TEXT_FURY_ENABLED..".")
 						else
 						Fury_Configuration[ABILITY_SUNDER_ARMOR_FURY] = false;
+						Print("Fury: ".."Sunder Armor "..TEXT_FURY_DISABLED..".")
 						end
 					</onClick>
 					<OnShow>
