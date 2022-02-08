@@ -1617,7 +1617,7 @@ function Fury()
           or not Fury_Configuration[ABILITY_WHIRLWIND_FURY]
           or not FuryWhirlwind))  then
 
-            -- Will try to lessen the amounts of Heroic Strike, when instanct attacks (MS, BT, WW) are enabled
+            -- Will try to lessen the amounts of Heroic Strike, when instant attacks (MS, BT, WW) are enabled
             -- Hamstring
             if Fury_Configuration[ABILITY_HAMSTRING_FURY]
               and HasWeapon()
@@ -1713,12 +1713,18 @@ end
 --
 --------------------------------------------------
 
+local function SecondsSince(timer)
+    return GetTime() - timer;
+end
+
 local function Fury_Charge()
     local dist = Fury_Distance()
     --print(tostring(Fury_Distance()));
     --if true then
     --    return;
     --end
+
+    --print("seconds since last charge: " .. SecondsSince(FuryLastChargeCast));
 
     if not UnitExists("target") and
       not FuryCombat then
@@ -1744,9 +1750,11 @@ local function Fury_Charge()
             AttackTarget()
         end
 
+        -- C1.Arms Stance, Thunder Clap
         if Fury_Configuration[ABILITY_THUNDER_CLAP_FURY]
-          and Fury_Configuration[MODE_HEADER_AOE]
-          and FuryLastChargeCast + 0.6 <= GetTime()
+          --and Fury_Configuration[MODE_HEADER_AOE]
+          and AmProt()
+          and SecondsSince(FuryLastChargeCast) < 4
           and dist <= 7
           and not SnareDebuff("target")
           and UnitMana("player") >= FuryThunderClapCost
@@ -1766,16 +1774,15 @@ local function Fury_Charge()
                 FuryLastSpellCast = GetTime()
             end
 
-        elseif not Fury_Configuration[MODE_HEADER_AOE]
+        elseif not Fury_Configuration[ABILITY_THUNDER_CLAP_FURY]
           and AmProt()
           --and FuryLastBattleShoutCast + 0.6 <= GetTime()
-          and FuryLastChargeCast + 3 > GetTime()
+          and SecondsSince(FuryLastChargeCast) < 4
           and dist <= 7
           and UnitMana("player") >= FuryBattleShoutCost
           and IsSpellReady(ABILITY_BATTLE_SHOUT_FURY) then
-            print("casting battle shout");
-            print("FLC: " .. tostring(FuryLastChargeCast) .. " /GT: " .. tostring(GetTime()));
             CastSpellByName(ABILITY_BATTLE_SHOUT_FURY)
+            FuryLastSpellCast = GetTime()
 
         elseif AmProt()
           and HasShield()
@@ -1795,8 +1802,29 @@ local function Fury_Charge()
                     FuryDanceDone = true
                 end
                 CastSpellByName(ABILITY_SHIELD_BLOCK_FURY)
-                --FuryLastSpellCast = GetTime()
+                FuryLastSpellCast = GetTime()
             end
+
+        elseif AmProt()
+            and HasShield()
+            and dist <= 7
+            and UnitMana("player") >= FuryShieldSlamCost
+            --and FuryLastChargeCast + 2 <= GetTime()
+            and IsSpellReady(ABILITY_SHIELD_SLAM_FURY) then
+                if GetActiveStance() ~= 2 then
+                    if FuryOldStance == nil then
+                        FuryOldStance = GetActiveStance()
+                    end
+                    Debug("C3.Defensive Stance, Shield Slam")
+                    DoShapeShift(2)
+                else
+                    Debug("C3.Shield Slam")
+                    if FuryOldStance == 1 then
+                        FuryDanceDone = true
+                    end
+                    CastSpellByName(ABILITY_SHIELD_SLAM_FURY)
+                    FuryLastSpellCast = GetTime()
+                end
 
         elseif Fury_Configuration[ABILITY_INTERCEPT_FURY]
           and GetActiveStance() == 3
@@ -1957,7 +1985,8 @@ local function Fury_ScanTalents()
         i = i + 1
     end
     Debug("Scanning Talent Tree")
-    FuryBattleShoutCost = 10;
+    FuryBattleShoutCost = 20;
+    FuryShieldSlamCost = 10;
     FuryShieldBlockCost = 10;
     -- Calculate the cost of Heroic Strike based on talents
     local _, _, _, _, currRank = GetTalentInfo(1, 1)

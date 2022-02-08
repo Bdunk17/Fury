@@ -198,22 +198,6 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 				</FontString>
 			</Layer>
 
-
-
-			<!-- NumEnemies -->
-			<Layer level="ARTWORK">
-				<FontString name="FuryConfig_TextNumEnemies" outline="NORMAL" inherits="GameFontNormalLarge"
-							text="NumEnemies()">
-					<Anchors>
-						<Anchor point="CENTER" relativePoint="TOP">
-							<Offset>
-								<AbsDimension x="100" y="-50"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-
 			<!-- Version string -->
 			<Layer level="ARTWORK">
 				<FontString name="FuryConfig_TextVersion" outline="NORMAL" inherits="GameFontNormalSmall">
@@ -484,6 +468,19 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 <!--					</Anchors>-->
 <!--				</FontString>-->
 <!--			</Layer>-->
+
+			<!-- Sunder Armor Text C1:8 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextSunderArmor" inherits="GameFontNormalLarge" text="Sunder Armor">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="60" y="-187"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
 
 			<!-- ============== -->
 			<!-- ABILITIES TEXT -->
@@ -897,6 +894,43 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 <!--					</OnLeave>-->
 <!--				</Scripts>-->
 <!--			</CheckButton>-->
+
+			<!-- Aoe Checkbutton C1:8 -->
+			<CheckButton name="FuryConfig_CheckButtonSunderArmor" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="30" y="-180"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ABILITY_SUNDER_ARMOR_FURY] = true;
+						else
+						Fury_Configuration[ABILITY_SUNDER_ARMOR_FURY] = false;
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ABILITY_SUNDER_ARMOR_FURY] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Toggle Sunder Armor");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
 
 			<!-- ================== -->
 			<!-- ABILITIES CHECKBOX -->
