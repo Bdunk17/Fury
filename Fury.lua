@@ -11,7 +11,7 @@
 --
 --------------------------------------------------
 -- Setup configuration to default or only new ones
-local function DoUpdateConfiguration(defaults)
+function DoUpdateConfiguration(defaults)
     local configs = {
 
       {"AutoAttack", true},       -- Set to false to disable auto-attack
@@ -29,8 +29,8 @@ local function DoUpdateConfiguration(defaults)
       {"InstantBuildTime", 2},    -- Set the time to spend building rage for upcoming 31 point instant attacks
       {"MaximumRage", 60},        -- Set this to the maximum amount of rage allowed when using abilities to increase rage
       {"NextAttackRage", 30},     -- Set this to the minimum rage to have to use next attack abilities (Cleave and Heroic Strike)
-      {"StanceChangeRage", 25},   -- Set this to the amount of rage allowed to be wasted when switching stances
-      {"PrimaryStance", 3},   -- Set this to the stance to fall back to after performing an attack requiring another stance
+      {"StanceChangeRage", 100},   -- Set this to the amount of rage allowed to be wasted when switching stances
+      {"PrimaryStance", false},   -- Set this to the stance to fall back to after performing an attack requiring another stance
 
       {MODE_HEADER_PROT, false },              -- Use threat and defensive abilities
       {MODE_HEADER_AOE, false},                -- Disable auto use of aoe (Disables OP, HS, BT, Exe, Enablse Cleave, Whirlwind)
@@ -2235,7 +2235,7 @@ function Fury_Togglemode(mode, prefix)
         -- Update UI:FuryConfig_CheckButtonProt
         FuryConfig_CheckButtonProt:SetChecked(false)
         Fury_RefreshConfigurationPanel()
-        Fury_Configuration["PrimaryStance"] = 3
+        --Fury_Configuration["PrimaryStance"] = 3;
         Print(prefix.." "..TEXT_FURY_DISABLED..".")
     else
         -- Enable Tank setup
@@ -2247,7 +2247,7 @@ function Fury_Togglemode(mode, prefix)
         -- Update UI:FuryConfig_CheckButtonProt
         FuryConfig_CheckButtonProt:SetChecked(true)
         Fury_RefreshConfigurationPanel()
-        Fury_Configuration["PrimaryStance"] = 2
+        --Fury_Configuration["PrimaryStance"] = 2;
         Print(prefix.." "..TEXT_FURY_ENABLED..".")
     end
 end
@@ -2328,13 +2328,19 @@ function Fury_SlashCommand(msg)
             end },
 
         ["aoe"] = { help = HELP_AOE, fn = function(options)
-                ToggleOption(MODE_HEADER_AOE, MODE_HEADER_AOE)
-                if Fury_Configuration[MODE_HEADER_AOE] then
-                  -- Update UI:FuryConfig_CheckButtonAoE
-                  FuryConfig_CheckButtonAoE:SetChecked(true)
-                else
-                  -- Update UI:FuryConfig_CheckButtonAoE
-                  FuryConfig_CheckButtonAoE:SetChecked(false)
+                -- if you are in combat, force true
+                if FuryCombat then
+                    Fury_Configuration[MODE_HEADER_AOE] = true
+                    FuryConfig_CheckButtonAoE:SetChecked(true)
+                else -- if you are not in combat, toggle aoe
+                    ToggleOption(MODE_HEADER_AOE, MODE_HEADER_AOE)
+                    if Fury_Configuration[MODE_HEADER_AOE] then
+                        -- Update UI:FuryConfig_CheckButtonAoE
+                        FuryConfig_CheckButtonAoE:SetChecked(true)
+                    else
+                        -- Update UI:FuryConfig_CheckButtonAoE
+                        FuryConfig_CheckButtonAoE:SetChecked(false)
+                    end
                 end
             end },
 

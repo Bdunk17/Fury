@@ -280,7 +280,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						Fury_SetDefaultParameters();
+						DoUpdateConfiguration(true);
 						FuryConfig:Hide();
 						FuryConfig:Show();
 					</OnClick>
