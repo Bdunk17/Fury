@@ -1006,6 +1006,11 @@ function Fury()
             Debug("10. Insignia of the Alliance")
             UseInventoryItem(slot)
 
+        -- force Berserker stance if not prot mode
+        elseif not AmProt()
+          and GetActiveStance() ~= 3 then
+            DoShapeShift(3)
+
         -- Execute, this will stance dance in prot mode?
         elseif Fury_Configuration[ABILITY_EXECUTE_FURY]
           and HasWeapon()
@@ -1377,14 +1382,14 @@ function Fury()
             FuryLastSunder = GetTime()
             FuryLastSpellCast = GetTime()
 
-        -- Sunder Armor (raid group)
+        -- Sunder Armor (1x as raid group DPS)
         elseif not Fury_Configuration[ABILITY_SUNDER_ARMOR_FURY]
           and not HasDebuff("target", "Ability_Warrior_Sunder", 5)
           and UnitMana("player") >= 15
           and HaveNotSunderedYet
           and inRaid
           and IsSpellReady(ABILITY_SUNDER_ARMOR_FURY) then
-            Debug("27. Sunder Armor (raid group) inRaid: " .. tostring(inRaid))
+            Debug("27. Sunder Armor (1x as raid group DPS) inRaid: " .. tostring(inRaid))
             CastSpellByName(ABILITY_SUNDER_ARMOR_FURY)
             FuryLastSunder = GetTime()
             FuryLastSpellCast = GetTime()
@@ -1655,6 +1660,7 @@ function Fury()
             -- Heroic Strike
             elseif Fury_Configuration[ABILITY_HEROIC_STRIKE_FURY]
               and HasWeapon()
+              and ((HasDebuff("target", "Ability_Warrior_Sunder", 5) and AmProt()) or not AmProt())
               and not Fury_Configuration[MODE_HEADER_AOE]
               and UnitMana("player") >= FuryHeroicStrikeCost
               and (UnitMana("player") >= tonumber(Fury_Configuration["NextAttackRage"])
