@@ -34,23 +34,3 @@ Heroic Strike Queueing
 
 
 MODE_HEADER_AOE
-
-
-
-PLAYER_ENTER_COMBAT
-FuryCombatStart = GetTime()
-
-RAID_ROSTER_UPDATE
-
-
-/script CastSpellByName("Berserker Stance");
-/fury stance 
-
-/cast Battle Stance
-/fury stance Battle Stance
-
-/cast Defensive Stance
-/fury stance Defensive Stance
-
-/cast Berserker Stance
-/fury stance Berserker Stance
