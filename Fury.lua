@@ -464,7 +464,7 @@ end
 -- Return if spell is ready
 local function IsSpellReady(spellname)
     return IsSpellReadyIn(spellname) == 0
- end
+end
 
 --------------------------------------------------
 -- Detect if unit has specific number of debuffs

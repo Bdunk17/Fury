@@ -1,0 +1,71 @@
+
+Elysium
+Nostalrius
+
+
+https://giters.com/cubenicke/Fury/stargazers
+
+https://github.com/cubenicke/Fury/issues/17
+
+https://githubhelp.com/cubenicke/Fury
+
+
+ZAAS CONVO:
+https://github.com/cubenicke/Fury/issues/17#issue-923047612?ref=https://githubhelp.com
+
+----------------------------------------------------------------------------------
+Start Attack on Heroic Strike macro
+https://forum.elysium-project.org/topic/32538-start-attack-on-heroic-strike-macro/
+
+/startattack
+/cast Heroic Strike
+
+
+
+/cast !Heroic Strike
+
+
+
+
+https://www.reddit.com/r/classicwow/comments/di3z1p/careful_not_a_meme_how_classic_changed_the/
+
+
+/startattack
+/cast Heroic Strike
+
+
+/stopcasting
+/startattack
+
+
+CHAT_MSG_COMBAT_SELF_HITS
+
+
+
+/startattack
+/cast Heroic Strike
+/stopcasting
+
+
+
+/startattack
+/cast Heroic Strike
+/script SpellStopCasting()
+/stopcasting
+
+
+/script TheoryCraftCast("Healing Wave", 1.1)
+
+/script TheoryCraftCast("Lesser Healing Wave", 1.1)
+
+/script TheoryCraftCast("Flash Heal", 1.1)
+
+/script TheoryCraftCast("Flash Heal", 1.1)
+
+
+
+
+
+-4456
+-1662.418
+81.89474
