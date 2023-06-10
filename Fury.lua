@@ -107,7 +107,7 @@ local function Fury_Configuration_Init()
     inGroup = not inRaid and GetNumPartyMembers() > 0;
     isSolo = not inRaid and not inGroup;
 
-    FuryConfig:Show();
+    FuryConfig:Hide();
 end
 
 --------------------------------------------------
@@ -184,6 +184,12 @@ local function Debug(msg)
         end
     end
     FuryRageDumped = nil
+end
+
+--------------------------------------------------
+-- Output info to log
+local function WLog(msg)
+    ChatFrame4:AddMessage("[WR]")
 end
 
 --------------------------------------------------
@@ -2883,3 +2889,7 @@ function Fury_OnEvent(event)
 end
 
 --------------------------------------------------
+
+--function hella()
+--    print('ffs! ' .. tostring(Fury_Configuration["AutoAttack"]));
+--end
