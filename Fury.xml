@@ -1575,7 +1575,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 			</CheckButton>
 
 			<!-- ===== -->
-			<!-- COL 3 -->
+			<!-- COL 4 -->
 			<!-- ===== -->
 
 			<!-- Pummel Checkbutton C4:1 -->
@@ -1904,8 +1904,130 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interfac
 		</Anchors>
 		<Layers>
 
+			<!-- ========== -->
+			<!-- MODES TEXT -->
+			<!-- ========== -->
+
+			<!-- ===== -->
+			<!-- COL 1 -->
+			<!-- ===== -->
+
+			<!-- WLActions Text C1:1 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextWLAction" inherits="GameFontNormalLarge" text="Echo Actions">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="60" y="-47"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<!-- WLEvents Text C1:2 -->
+			<Layer level="ARTWORK">
+				<FontString name="FuryConfig_TextWLEvent" inherits="GameFontNormalLarge" text="Echo Events">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="60" y="-67"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+
+
 		</Layers>
 		<Frames>
+
+			<!-- ============== -->
+			<!-- MODES CHECKBOX -->
+			<!-- ============== -->
+
+			<!-- ===== -->
+			<!-- COL 1 -->
+			<!-- ===== -->
+
+			<!-- WLActions Checkbutton C1:1 -->
+			<CheckButton name="FuryConfig_CheckWLAction" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="30" y="-40"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ENV_WLACTION] = true;
+						Print("Fury: ".."WLAction "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ENV_WLACTION] = false;
+						Print("Fury: ".."WLAction "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ENV_WLACTION] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Toggle WL Log Action Feedback");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+
+			<!-- WLEvents Checkbutton C1:2 -->
+			<CheckButton name="FuryConfig_CheckWLEvent" inherits="OptionsCheckButtonTemplate"
+						 checked="false">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="30" y="-60"></AbsDimension>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<onClick>
+						if this:GetChecked() then
+						Fury_Configuration[ENV_WLEVENT] = true;
+						Print("Fury: ".."WLEvent "..TEXT_FURY_ENABLED..".")
+						else
+						Fury_Configuration[ENV_WLEVENT] = false;
+						Print("Fury: ".."WLEvent "..TEXT_FURY_DISABLED..".")
+						end
+					</onClick>
+					<OnShow>
+						if Fury_Configuration[ENV_WLEVENT] then
+						this:SetChecked(true);
+						else
+						this:SetChecked(false);
+						end
+					</OnShow>
+					<OnEnter>
+						GameTooltip:SetOwner(this,"ANCHOR_TOPLEFT");
+						GameTooltip:SetText("Toggle WL Log Event Feedback");
+						this.tooltipShown = true;
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+						this.tooltipShown = false;
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
 
 		</Frames>
 	</Frame>

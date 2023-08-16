@@ -37,6 +37,9 @@ function DoUpdateConfiguration(defaults)
       {MODE_HEADER_DEBUFF, false},             -- use cures when player have a debuff
       {MODE_HEADER_AOE_TANK, true},            -- toggle for single <-> AE tank mode
 
+      {ENV_WLACTION, false},                   -- enable WL console action feedback
+      {ENV_WLEVENT, false},                    -- enable WL console event feedback
+
       {ABILITY_BATTLE_SHOUT_FURY, true},       -- Set to false to disable use of ability
       {ABILITY_BERSERKER_RAGE_FURY, true},     -- Used to counter fears
       {ABILITY_BLOODRAGE_FURY, true},          -- Gives extra rage
@@ -155,10 +158,11 @@ end
 --------------------------------------------------
 -- Print msg to console
 local function Print(msg)
-    if not DEFAULT_CHAT_FRAME then
-        return
-    end
-    DEFAULT_CHAT_FRAME:AddMessage(BINDING_HEADER_FURY..": "..(msg or ""))
+    --if not DEFAULT_CHAT_FRAME then
+    --    return
+    --end
+    --DEFAULT_CHAT_FRAME:AddMessage(BINDING_HEADER_FURY..": "..(msg or ""))
+    ChatFrame4:AddMessage(BINDING_HEADER_FURY..": "..(msg or ""))
 end
 
 --------------------------------------------------
@@ -188,8 +192,10 @@ end
 
 --------------------------------------------------
 -- Output info to log
-local function WLog(msg)
-    ChatFrame4:AddMessage("[WR]")
+local function WLCastEnemy(action, target)
+    if Fury_Configuration[ENV_WLACTION] then
+        ChatFrame4:AddMessage("[FU] Casting " .. action .. ' on ' .. target .. '!')
+    end
 end
 
 --------------------------------------------------
@@ -785,13 +791,13 @@ end
 local function AddEnemyCount(Enemies)
     Fury_SetEnemies(Enemies)
     Debug("Enemies "..Enemies)
-    if Enemies < 2
-      and Fury_Configuration[MODE_HEADER_AOE] then
-        Print(TEXT_FURY_DISABLING_AOE)
-        -- Update UI:FuryConfig_CheckButtonAoE
-        FuryConfig_CheckButtonAoE:SetChecked(false)
-        Fury_Configuration[MODE_HEADER_AOE] = false
-    end
+    --if Enemies < 2
+    --  and Fury_Configuration[MODE_HEADER_AOE] then
+    --    Print(TEXT_FURY_DISABLING_AOE)
+    --    -- Update UI:FuryConfig_CheckButtonAoE
+    --    FuryConfig_CheckButtonAoE:SetChecked(false)
+    --    Fury_Configuration[MODE_HEADER_AOE] = false
+    --end
 end
 --------------------------------------------------
 
@@ -1327,6 +1333,7 @@ function Fury()
           and IsSpellReady(ABILITY_BLOODTHIRST_FURY) then
             Debug("23. Bloodthirst")
             CastSpellByName(ABILITY_BLOODTHIRST_FURY)
+            WLCastEnemy('Bloodthirst', UnitName("target"))
             FuryLastSpellCast = GetTime()
 
         -- Mortal Strike
@@ -1364,6 +1371,7 @@ function Fury()
                 end
             end
             CastSpellByName(ABILITY_WHIRLWIND_FURY)
+            WLCastEnemy(ABILITY_WHIRLWIND_FURY, UnitName("target"))
             WWEnemies.WWCount = 0
             FuryLastSpellCast = GetTime()
             WWEnemies.WWTime = GetTime()
@@ -1677,6 +1685,7 @@ function Fury()
               and IsSpellReady(ABILITY_HEROIC_STRIKE_FURY) then
                 Debug("52. Heroic Strike")
                 CastSpellByName(ABILITY_HEROIC_STRIKE_FURY)
+                WLCastEnemy('Heroic Strike', UnitName("target"))
                 FuryLastSpellCast = GetTime()
                 -- No global cooldown, added anyway to prevent Heroic Strike from being spammed over other abilities
 
@@ -2340,20 +2349,28 @@ function Fury_SlashCommand(msg)
             end },
 
         ["aoe"] = { help = HELP_AOE, fn = function(options)
-                -- if you are in combat, force true
-                if FuryCombat then
-                    Fury_Configuration[MODE_HEADER_AOE] = true
+                ToggleOption(MODE_HEADER_AOE, MODE_HEADER_AOE)
+                if Fury_Configuration[MODE_HEADER_AOE] then
+                    -- Update UI:FuryConfig_CheckButtonAoE
                     FuryConfig_CheckButtonAoE:SetChecked(true)
-                else -- if you are not in combat, toggle aoe
-                    ToggleOption(MODE_HEADER_AOE, MODE_HEADER_AOE)
-                    if Fury_Configuration[MODE_HEADER_AOE] then
-                        -- Update UI:FuryConfig_CheckButtonAoE
-                        FuryConfig_CheckButtonAoE:SetChecked(true)
-                    else
-                        -- Update UI:FuryConfig_CheckButtonAoE
-                        FuryConfig_CheckButtonAoE:SetChecked(false)
-                    end
+                else
+                    -- Update UI:FuryConfig_CheckButtonAoE
+                    FuryConfig_CheckButtonAoE:SetChecked(false)
                 end
+                -- if you are in combat, force true
+                --if FuryCombat then
+                --    Fury_Configuration[MODE_HEADER_AOE] = true
+                --    FuryConfig_CheckButtonAoE:SetChecked(true)
+                --else -- if you are not in combat, toggle aoe
+                --    ToggleOption(MODE_HEADER_AOE, MODE_HEADER_AOE)
+                --    if Fury_Configuration[MODE_HEADER_AOE] then
+                --        -- Update UI:FuryConfig_CheckButtonAoE
+                --        FuryConfig_CheckButtonAoE:SetChecked(true)
+                --    else
+                --        -- Update UI:FuryConfig_CheckButtonAoE
+                --        FuryConfig_CheckButtonAoE:SetChecked(false)
+                --    end
+                --end
             end },
 
         ["prot"] = { help = HELP_PROT, fn = function()

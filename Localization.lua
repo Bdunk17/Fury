@@ -188,6 +188,9 @@ MODE_HEADER_DEBUFF = "Debuff"
 MODE_HEADER_PROT   = "Prot"
 MODE_HEADER_AOE_TANK = true
 
+ENV_WLACTION = "false"
+ENV_WLEVENT = "false"
+
 SLASH_FURY_ATTACKRAGE = "Minimum rage required when using Heroic Strike or Cleave set to dump rage "
 SLASH_FURY_AUTOATTACK = "Autoattack"
 SLASH_FURY_DANCE      = "Rage allowed to be wasted when switching stance set to "
