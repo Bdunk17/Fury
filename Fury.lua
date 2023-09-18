@@ -71,6 +71,7 @@ function DoUpdateConfiguration(defaults)
       {ITEM_CONS_JUJU_MIGHT, false},           -- use on cooldown
       {ITEM_CONS_JUJU_POWER, false},           -- use on cooldown
       {ITEM_CONS_OIL_OF_IMMOLATION, false},    -- use on cooldown
+      {ITEM_CONS_FISHLIVER_OIL, false},        -- use on cooldown, Limited item logic level 63 sub 20 health
 
       {ITEM_TRINKET_EARTHSTRIKE, true},        -- use on cooldown
       {ITEM_TRINKET_KOTS, true},               -- use on cooldown
@@ -150,6 +151,13 @@ function Fury_RefreshConfigurationPanel()
     end
 end
 
+function Fury_HealingSetConfigurationPanel()
+    if FuryHealingConfig:isShown() then
+        FuryHealingConfig:Hide();
+    else
+        FuryHealingConfig:Show();
+    end
+end
 
 --------------------------------------------------
 --
@@ -590,6 +598,11 @@ local function HasShield()
     end
     return nil
 end
+--------------------------------------------------
+
+local function IsRaidBossExecuteable()
+    return UnitHealth("target") < 21 and UnitLevel("target") == 63
+end
 
 --------------------------------------------------
 -- Return trinket slot if trinket is equipped and not on cooldown
@@ -871,6 +884,12 @@ local function Fury_TreatDebuffPlayer()
           and IsItemReady(ITEM_CONS_RESTORATIVE_POTION) then
             Print(ITEM_CONS_RESTORATIVE_POTION_POTION)
             UseContainerItemByNameOnPlayer(ITEM_CONS_RESTORATIVE_POTION_POTION)
+
+        elseif allowCombatCooldown
+          and IsRaidBossExecuteable()
+          and IsItemReady(ITEM_CONS_FISHLIVER_OIL) then
+                    Print(ITEM_CONS_FISHLIVER_OIL)
+                    UseContainerItemByNameOnPlayer(ITEM_CONS_FISHLIVER_OIL)
 
         else
             return false
@@ -1389,6 +1408,7 @@ function Fury()
         -- Sunder Armor (until 5)
         elseif Fury_Configuration[ABILITY_SUNDER_ARMOR_FURY]
           and not HasDebuff("target", "Ability_Warrior_Sunder", 5)
+          and not HasDebuff("target", "ability_warrior_riposte")  --Don't do if Expose armor is up
           and UnitMana("player") >= 15
           and IsSpellReady(ABILITY_SUNDER_ARMOR_FURY) then
             Debug("27. Sunder Armor (not 5)")
