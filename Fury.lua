@@ -321,6 +321,85 @@ local res = {
         BOSS_NAX_SIR_ZELIEK_FURY
     }
 }
+-------------------------------------------------
+--- Clamped
+local function isClamped(value, min, max)
+    return value >= min and value <= max
+end
+
+
+--------------------------------------------------
+--- Return a bag, slot array with all equippable items
+local lowWrath = 16566
+local highWrath = 16959
+local lastShout = nil
+local SlotNameToID = {
+    ["INVSLOT_HEAD"] = 1,
+    ["INVSLOT_SHOULDER"] = 3,
+    ["INVSLOT_CHEST"] = 5,
+    ["INVSLOT_WAIST"] = 6,
+    ["INVSLOT_LEGS"] = 7,
+    ["INVSLOT_FEET"] = 8,
+    ["INVSLOT_WRIST"] = 9,
+    ["INVSLOT_HAND"] = 10
+}
+
+local function FindWrathItems()
+    local itemsFound = {}
+    for bag = 0, 4 do
+        for slot = 1, GetContainerNumSlots(bag) do
+            local itemLink = GetContainerItemLink(bag, slot)
+            if itemLink then
+                local _, _, itemString = string.find(itemLink, "item:(%d+):")
+                local itemID = tonumber(itemString)
+                if itemID and isClamped(itemID, lowWrath, highWrath) then
+                    _, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(itemID)
+                    table.insert(itemsFound, {bag = bag, slot = slot, ID = itemID, slot = SlotNameToID[itemEquipLoc]})
+                    if #itemsFound == 3 then
+                        return itemsFound
+                    end
+                end
+            end
+        end
+    end
+    return itemsFound
+end
+
+local function EquippedWrath(check)
+    local itemsFound = 0
+    for slotID, _ in pairs(SlotNameToID) do
+        local itemLink = GetInventoryItemLink("player", slotID)
+        if itemLink then
+            local _, _, itemString = string.find(itemLink, "item:(%d+):")
+            local itemID = tonumber(itemString)
+            if itemID and isClamped(itemID, lowWrath, highWrath) then
+                itemsFound = itemsFound + 1
+                if(check && itemsFound == 3) then
+                return true
+                end
+            end
+        end
+    end
+    if itemsFound < 3 and check then
+        return false
+    end
+    return itemsFound
+end
+
+local function HaveThreeWrathItems()
+    local numWrathInBags = table.getn(WrathItems)
+    local numWrathEquipped = EquippedWrath()
+    return numWrathEquipped + numWrathInBags >= 3
+end
+
+function WrathShout()
+    --- function that logical swaps in three wrath and casts battle shout
+
+
+
+end
+
+
 
 --------------------------------------------------
 -- Check if boss 'requires' resistance of specific type

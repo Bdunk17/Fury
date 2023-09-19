@@ -54,3 +54,6 @@ RAID_ROSTER_UPDATE
 
 /cast Berserker Stance
 /fury stance Berserker Stance
+
+
+
