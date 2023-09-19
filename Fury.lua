@@ -374,8 +374,8 @@ local function EquippedWrath(check)
             local itemID = tonumber(itemString)
             if itemID and isClamped(itemID, lowWrath, highWrath) then
                 itemsFound = itemsFound + 1
-                if(check && itemsFound == 3) then
-                return true
+                if check and itemsFound == 3 then
+                    return true
                 end
             end
         end
